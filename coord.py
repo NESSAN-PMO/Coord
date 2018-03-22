@@ -71,7 +71,9 @@ def mat_teme_tod(epoch):
     tt1, tt2 = erfa.taitt(tai1, tai2)
     tdb1, tdb2 = tt1, tt2 # time difference between tt and tdb is as much as about 1.6 millisends and are periodic with an average of zero
     theta = erfa.eqeq94(tdb1, tdb2)
-    mat = rotation_matrix(-theta, 'z')
+    print(theta)
+    mat = rotation_matrix(-theta*u.rad, 'z')
+    return mat
 
 def mat_icrs_tod(epoch):
     """
@@ -195,10 +197,17 @@ def site_posvel(epoch, elong, phi, height):
 
 if __name__ == '__main__':
     from datetime import datetime
-    r_itrs = np.array([19440.953805, 16881.609273, -6777.115092])
-    v_itrs = np.array([-0.8111827456, -0.2573799137, -3.0689508125])
-    epoch = Time(datetime(1999, 3, 4, 0, 0, 0)) - 13.0 * u.second
-    r_icrs, v_icrs = itrs2icrs(epoch, r_itrs, v_itrs)
-    print(r_icrs)
-    print(v_icrs)
+    # r_itrs = np.array([19440.953805, 16881.609273, -6777.115092])
+    # v_itrs = np.array([-0.8111827456, -0.2573799137, -3.0689508125])
+    epoch = Time(datetime(2017,12,17,12, 3, 38, 265000))
+    mat_teme_tod = mat_teme_tod(epoch)
+    mat_icrs_tod = mat_icrs_tod(epoch)
+    print(mat_teme_tod)
+    print(mat_icrs_tod)
+    print(mat_icrs_tod.transpose()*mat_teme_tod)
+#    r_icrs, v_icrs = itrs2icrs(epoch, r_itrs, v_itrs)
+    #r_teme = np.array([1.0, 0.0, 0.0])
+    #r_tod = teme2tod(epoch, r_teme)
+    #r_icrs = tod2icrs(epoch, r_tod)
+    #print(r_icrs)
 
