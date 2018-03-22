@@ -71,9 +71,8 @@ def mat_teme_tod(epoch):
     tt1, tt2 = erfa.taitt(tai1, tai2)
     tdb1, tdb2 = tt1, tt2 # time difference between tt and tdb is as much as about 1.6 millisends and are periodic with an average of zero
     theta = erfa.eqeq94(tdb1, tdb2)
-    print(theta)
     mat = rotation_matrix(-theta*u.rad, 'z')
-    return mat
+    return np.matrix(mat)
 
 def mat_icrs_tod(epoch):
     """
@@ -131,6 +130,7 @@ def itrs2icrs(epoch, r_itrs, v_itrs=None):
 
 def teme2tod(epoch, r_teme):
     mat = mat_teme_tod(epoch)
+    #mat = mat_teme_tod
     r_tod = mat * np.matrix(r_teme).transpose()
     return r_tod.getA1()
 
@@ -138,7 +138,7 @@ def teme2tod(epoch, r_teme):
 def tod2teme(epoch, r_tod):
     mat = mat_teme_tod(epoch)
     r_teme = mat.transpose() * np.matrix(r_tod).transpose()
-    return t_teme.getA1()
+    return r_teme.getA1()
 
 
 def icrs2tod(epoch, r_icrs):
@@ -200,14 +200,14 @@ if __name__ == '__main__':
     # r_itrs = np.array([19440.953805, 16881.609273, -6777.115092])
     # v_itrs = np.array([-0.8111827456, -0.2573799137, -3.0689508125])
     epoch = Time(datetime(2017,12,17,12, 3, 38, 265000))
-    mat_teme_tod = mat_teme_tod(epoch)
-    mat_icrs_tod = mat_icrs_tod(epoch)
-    print(mat_teme_tod)
-    print(mat_icrs_tod)
-    print(mat_icrs_tod.transpose()*mat_teme_tod)
+    # mat_teme_tod = mat_teme_tod(epoch)
+    # mat_icrs_tod = mat_icrs_tod(epoch)
+    # print(mat_teme_tod)
+    # print(mat_icrs_tod)
+    # print(mat_icrs_tod.transpose()*mat_teme_tod)
 #    r_icrs, v_icrs = itrs2icrs(epoch, r_itrs, v_itrs)
-    #r_teme = np.array([1.0, 0.0, 0.0])
-    #r_tod = teme2tod(epoch, r_teme)
+    r_teme = np.array([1.0, 0.0, 0.0])
+    r_tod = teme2tod(epoch, r_teme)
     #r_icrs = tod2icrs(epoch, r_tod)
-    #print(r_icrs)
+    print(r_tod)
 
